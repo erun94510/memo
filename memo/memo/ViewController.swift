@@ -8,7 +8,7 @@
 import CoreData
 import UIKit
 
-class ViewController: UIViewController, UITableViewDataSource {
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     var memoList: [NSManagedObject] {
         return try! readMemoData()
@@ -22,10 +22,13 @@ class ViewController: UIViewController, UITableViewDataSource {
         
 //        self.tableView.delegate = self
 //        self.tableView.dataSource = self
-//        
-//        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: self.createMemoData(content: "", createdOrEditAtDate: Date.now))
-
-        print(memoList)
+        
+        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(moveToCreateMemoView(_:)))
+        let memoTitle = "Memo"
+        self.navigationItem.rightBarButtonItem = addButton
+        self.navigationItem.title = memoTitle
+        
+        
     }
     
     
@@ -47,6 +50,12 @@ extension ViewController {
         cell.textLabel?.text = content
         cell.detailTextLabel?.text = "\(String(describing: createdOrEditAtDate))"
         return cell
+    }
+    
+    @objc private func moveToCreateMemoView(_ sender: Any) {
+        let vc = CreateMemoView()
+        
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func createMemoData(content: String, createdOrEditAtDate: Date) -> Bool {
