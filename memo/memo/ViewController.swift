@@ -10,9 +10,19 @@ import UIKit
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-    var memoList: [NSManagedObject] {
+    lazy var memoList: [NSManagedObject] = {
         return try! readMemoData()
-    }
+    }()
+    
+    lazy var persistentContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "Memo")
+        container.loadPersistentStores { storeDescripntion, error in
+            if let error = error as NSError? {
+                fatalError("\(error)")
+            }
+        }
+        return container
+    }()
     
     var tableView: UITableView = UITableView(frame: .zero, style: .insetGrouped)
 
@@ -28,6 +38,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         self.navigationItem.rightBarButtonItem = addButton
         self.navigationItem.title = memoTitle
         
+        self.view.addSubview(self.tableView)
         
     }
     
@@ -126,3 +137,12 @@ extension ViewController {
     }
 }
 
+extension UIViewController {
+    func hideKeyboard() {
+        let _ = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+}

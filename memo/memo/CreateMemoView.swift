@@ -32,7 +32,8 @@ class CreateMemoView: UIViewController, UITextFieldDelegate {
     
     @objc func createMemoButton(_ sender: Any) {
         let content = self.textView.text
-        let _ = ViewController().createMemoData(content: content!, createdOrEditAtDate: Date.now)
+        _ = ViewController().createMemoData(content: content ?? "", createdOrEditAtDate: Date.now)
+        _ = self.navigationController?.popViewController(animated: true)
     }
     
 }
